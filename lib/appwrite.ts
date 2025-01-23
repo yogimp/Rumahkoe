@@ -22,18 +22,11 @@ export async function login() {
     try {
         const redirectUri = Linking.createURL("/");
 
-        const response = await account.createOAuth2Token(
-            OAuthProvider.Google,
-            redirectUri
-        );
+        const response = await account.createOAuth2Token(OAuthProvider.Google, redirectUri);
         if (!response) throw new Error("Create OAuth2 token failed");
 
-        const browserResult = await openAuthSessionAsync(
-            response.toString(),
-            redirectUri
-        );
-        if (browserResult.type !== "success")
-            throw new Error("Create OAuth2 token failed");
+        const browserResult = await openAuthSessionAsync(response.toString(), redirectUri);
+        if (browserResult.type !== "success") throw new Error("Create OAuthSession failed");
 
         const url = new URL(browserResult.url);
         const secret = url.searchParams.get("secret")?.toString();
